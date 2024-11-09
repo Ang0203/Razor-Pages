@@ -1,0 +1,149 @@
+﻿@page "/hoa-don/them-nhap"
+@model HDT_22810201.Pages.HD_ThemNhapModel
+@functions
+{
+	public string MuiTen(string inp)
+	{
+		switch (inp.ToLower())
+		{
+			case "tang":
+				return "^";
+			case "giam":
+				return "v";
+			default:
+				return "-";
+		}
+	}
+}
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else
+{
+	<title>Cửa hàng M: Hóa đơn - Thêm nhập</title>
+	<h1 style="font-size:24px; text-align: center;">Thêm hóa đơn nhập</h1>
+	<h2 style="font-size:18px; text-align: center;">(Không có phân trang vì em không biết làm AJAX)</h2>
+	<div class="dieuhuong">
+		<a class="btn them-btn tim-quaphai" onclick="xacNhanMe();">Lập danh sách</a>
+		<a class="btn tim-batdaulai tim-quatrai tim-quaphai" asp-page="/HoaDon/HD_Them_Nhap" asp-route-xacnhan="0">Đặt lại</a>
+		<a class="btn tim-vedanhsach tim-quatrai" asp-page="/HoaDon/HD_DanhSach" asp-route-loai="nhap" asp-route-trang="1">Về danh sách</a>
+	</div>
+	<div class="dieuhuong" style="color: red;">@Model.BaoLoi</div>
+	<br>
+	<form id="zform" method="post">
+		<input id="xacnhan" asp-for="XacNhan" value="@Model.XacNhan" readonly="" hidden="">
+		<input class="ds-sx" id="ds-0" asp-for="SapXep_HD_ThemNhap[0]" value="@Model.SapXep_HD_ThemNhap[0]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-1" asp-for="SapXep_HD_ThemNhap[1]" value="@Model.SapXep_HD_ThemNhap[1]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-2" asp-for="SapXep_HD_ThemNhap[2]" value="@Model.SapXep_HD_ThemNhap[2]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-3" asp-for="SapXep_HD_ThemNhap[3]" value="@Model.SapXep_HD_ThemNhap[3]" readonly="" hidden="">
+		<table class="danhsach">
+			<tr>
+				<th onclick="sapXep(0, 4)" style="cursor: pointer; ">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Mã
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemNhap[0])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(1, 4)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Tên
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemNhap[1])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(2, 4)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Loại
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemNhap[2])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(3, 4)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Công ty
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemNhap[3])</span>
+					</button>
+				</th>
+				<th>Ngày SX</th>
+				<th>Hạn dùng</th>
+				<th>Số lượng</th>
+				<th>Đơn giá (đồng)</th>
+			</tr>
+			@if (!Model.DanhSach.Any())
+			{
+				<tr>
+					<td colspan="9" class="dstrong" style="text-align: center;">
+						Danh sách hiện đang trống.<br>
+						Vui lòng thêm sản phẩm.
+					</td>
+				</tr>
+			}
+			else
+			{
+				@for (int i = 0; i <= (Model.DanhSach.Count - 1); i++)
+				{
+					var sp = Model.DanhSach[i];
+					<tr>
+						<td>@sp.Ma</td>
+						<td>@sp.Ten</td>
+						<td>@sp.Loai</td>
+						<td>@sp.CongTy</td>
+						<td>
+							<input asp-for="DLVao[i][0]"
+								   value="@Model.DLVao[i][0]"
+								   type="date"
+								   class="nsx"
+								   style="width: 120px;"
+								   onfocus="gioiHanNgay(@Model.DanhSach.Count);">
+						</td>
+						<td>
+							<input asp-for="DLVao[i][1]"
+								   value="@Model.DLVao[i][1]"
+								   type="date"
+								   class="hd"
+								   style="width: 120px;"
+								   onfocus="gioiHanNgay(@Model.DanhSach.Count);">
+						</td>
+						<td>
+							<input asp-for="DLVao[i][2]"
+								   value="@Model.DLVao[i][2]"
+								   type="text"
+								   autocomplete="off"
+								   maxlength="6"
+								   style="width: 100px;">
+						</td>
+						<td>
+							<input asp-for="DLVao[i][3]"
+								   value="@Model.DLVao[i][3]"
+								   type="text"
+								   autocomplete="off"
+								   maxlength="10"
+								   style="width: 100px;">
+						</td>
+					</tr>
+				}
+			}
+		</table>
+	</form>
+	<button onclick="topFunction()" id="lendautrang">^</button>
+
+	<script>
+		// W3Schools
+		// Get the button
+		let mybutton = document.getElementById("lendautrang");
+
+		// When the user scrolls down 20px from the top of the document, show the button
+		window.onscroll = function () { scrollFunction() };
+
+		function scrollFunction() {
+			if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+				mybutton.style.display = "block";
+			} else {
+				mybutton.style.display = "none";
+			}
+		}
+
+		// When the user clicks on the button, scroll to the top of the document
+		function topFunction() {
+			document.body.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
+		}
+	</script>
+}

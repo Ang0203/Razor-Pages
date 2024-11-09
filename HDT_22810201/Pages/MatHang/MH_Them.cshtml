@@ -1,0 +1,61 @@
+﻿@page "/mat-hang/them"
+@model HDT_22810201.Pages.MH_ThemModel
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else
+{
+	<title>Cửa hàng M: Mặt hàng - Thêm</title>
+	<div class="dv them-div">
+		<form method="post">
+			<h1 style="font-size:24px;">Thêm sản phẩm</h1>
+			<label>
+				Mã<br>
+				<input asp-for="SanPham.Ma"
+					   value="@Model.SanPham.Ma"
+					   maxlength="20"
+					   required="">
+			</label> <br>
+			<label>
+				Tên<br>
+				<input asp-for="SanPham.Ten"
+					   value="@Model.SanPham.Ten"
+					   maxlength="20"
+					   required="">
+			</label> <br>
+			<label>
+				Loại<br>
+				<input id="loai-inp"
+					   asp-for="SanPham.Loai"
+					   value="@Model.SanPham.Loai"
+					   maxlength="20"
+					   required="">
+				<select id="loai" onChange="chonLoaiCty(this.id)">
+					<option value=""></option>
+					@foreach (var s in Model.LoaiTemp)
+					{
+						<option value="@s">@s</option>
+					}
+				</select>
+			</label> <br>
+			<label>
+				Công ty<br>
+				<input id="cty-inp"
+					   asp-for="SanPham.CongTy"
+					   value="@Model.SanPham.CongTy"
+					   maxlength="20"
+					   required="">
+				<select id="cty" onChange="chonLoaiCty(this.id)">
+					<option value=""></option>
+					@foreach (var s in Model.CTyTemp)
+					{
+						<option value="@s">@s</option>
+					}
+				</select>
+			</label> <br> <br>
+			<input type="submit" value="Thêm">
+			<a asp-page="/MatHang/MH_DanhSach" asp-route-trang="1">Trở về danh sách</a>
+			<div style="color: green;">@Model.BaoLoi[0]</div>
+			<div style="color: red;">@Model.BaoLoi[1]</div>
+		</form>
+	</div>
+}

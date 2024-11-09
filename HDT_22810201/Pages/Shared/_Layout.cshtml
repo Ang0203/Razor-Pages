@@ -1,0 +1,489 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/HDT_22810201.styles.css" asp-append-version="true" />
+	<script src="~/js/cac-ham.js"></script>
+	<style>
+		/* nền */
+		body {
+			font-family: 'Helvetica Neue';
+			background-color: #effaf6;
+			font-size: 16px;
+		}
+
+		/* thanh trên */
+		.hidden-btn {
+			background-color: inherit;
+			border: none;
+		}
+
+		/* lên đầu trang */
+		#lendautrang {
+			display: none;
+			position: fixed;
+			bottom: 20px;
+			right: 30px;
+			z-index: 99;
+			font-size: 18px;
+			border: none;
+			outline: none;
+			background-color: red;
+			color: white;
+			cursor: pointer;
+			padding: 15px;
+			border-radius: 4px;
+		}
+
+			#lendautrang:hover {
+				background-color: #555;
+			}
+
+		/* trang chủ */
+		#vetrangchu {
+			border: 1px solid black;
+			background-color: #66ff66;
+		}
+
+		.menu-btn {
+			color: white;
+			border: 1px solid black;
+			padding: 14px 28px;
+			font-size: 16px;
+			cursor: pointer;
+			margin: 0 auto;
+			display: block;
+			width: 200px;
+			text-decoration: none;
+		}
+
+		#mathang {
+			background-color: #33cc33;
+		}
+
+			#mathang:hover {
+				background-color: #009900;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			#mathang:focus {
+				background-color: #009900;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		#loaihang {
+			background-color: #0099ff;
+		}
+
+			#loaihang:hover {
+				background-color: #0066ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			#loaihang:focus {
+				background-color: #0066ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+	
+		#hoadon {
+			background-color: #ff66ff;
+		}
+
+			#hoadon:hover {
+				background-color: #ff33cc;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			#hoadon:focus {
+				background-color: #ff33cc;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		#thongke {
+			background-color: #ff5050;
+		}
+
+			#thongke:hover {
+				background-color: #ff1a1a;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			#thongke:focus {
+				background-color: #ff1a1a;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		/* danh sách */
+		div.dieuhuong {
+			display: flex;
+			justify-content: center;
+		}
+
+		div.trang {
+			margin: auto;
+			width: 50%;
+			white-space: nowrap;
+		}
+
+		a.sangtrang {
+			text-decoration: none;
+			display: inline-block;
+			padding: 5px 10px;
+		}
+
+			a.sangtrang:hover {
+				background-color: #ddd;
+				color: black;
+			}
+
+			a.sangtrang.diden {
+				background-color: #04AA6D;
+				color: white;
+			}
+
+			a.sangtrang.hientai {
+				background-color: #CCCCCC;
+				color: white;
+			}
+
+		table.danhsach {
+			border-collapse: collapse;
+			width: 50%;
+			text-align: center;
+			margin: auto;
+		}
+
+			table.danhsach td, th {
+				border: 1px solid black;
+				white-space: nowrap;
+				word-wrap: break-word;
+				text-align: left;
+				padding: 8px;
+			}
+
+			table.danhsach td.so {
+				text-align: right;
+			}
+
+			table.danhsach tr:nth-child(odd) {
+				background-color: white;
+			}
+
+			table.danhsach tr:nth-child(even) {
+				background-color: #dddddd;
+			}
+
+		/* thêm, tìm, sửa, xóa */
+		input.ktdl {
+			background-color: #ff9900;
+			padding: 14px 28px;
+		}
+
+			input.ktdl:hover {
+			background: #ff6600;
+			color: white;
+			box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+		}
+
+			input.ktdl:focus {
+			background: #ff6600;
+			color: white;
+			box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+		}
+		div.dv {
+			display: flex;
+			justify-content: center;
+			border: 1px solid black;
+			word-break: break-word;
+			margin-left: 25%;
+			margin-right: 25%;
+		}
+
+		div.thongtin-div {
+			background-color: #85e085;
+		}
+
+		div.dangnhap-div {
+			background-color: #ff99cc;
+		}
+
+		div.dangxuat-div {
+			background-color: #9999ff;
+		}
+
+		div.them-div {
+			background-color: #84e184;
+		}
+
+		div.sua-div {
+			background-color: #80ccff;
+		}
+
+		div.xoa-div {
+			background-color: #ff8080;
+		}
+
+		div.tim-div {
+			background-color: #ffc266;
+		}
+
+		a.btn {
+			color: white;
+			border: 1px solid black;
+			font-size: 16px;
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		a.them-btn {
+			background-color: #33cc33;
+			padding: 14px 28px;
+		}
+
+			a.them-btn:hover {
+				background-color: #009900;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.them-btn:focus {
+				background-color: #009900;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		a.tim-btn {
+			background-color: #ff9900;
+			padding: 14px 28px;
+		}
+
+			a.tim-btn:hover {
+				background: #ff6600;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.tim-btn:focus {
+				background: #ff6600;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		a.sua-btn {
+			background-color: #0099ff;
+			width: 40%;
+			height: 100%;
+			padding: 5px 10px;
+			margin-left: 5px;
+			margin-right: 5px;
+			display: inline;
+		}
+
+			a.sua-btn:hover {
+				background: #0066ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.sua-btn:focus {
+				background: #0066ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		a.chitiet-btn {
+			background-color: #0000ff;
+			width: 40%;
+			height: 100%;
+			padding: 5px 10px;
+			margin-left: 5px;
+			display: inline;
+		}
+
+			a.chitiet-btn:hover {
+				background: #3333ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.chitiet-btn:focus {
+				background: #3333ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		a.xoa-btn {
+			background-color: #ff0000;
+			width: 40%;
+			height: 100%;
+			padding: 5px 10px;
+			display: inline;
+		}
+
+			a.xoa-btn:hover {
+				background: #cc0000;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.xoa-btn:focus {
+				background: #cc0000;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		/* tìm nâng cao */
+		a.nutbitat {
+			background-color: #CCCCCC;
+			margin-right: 20px;
+			color: white;
+			padding: 14px 28px;
+		}
+
+		a.tim-quatrai {
+			margin-right: 10px;
+		}
+
+		a.tim-quaphai {
+			margin-right: 10px;
+		}
+
+		a.tim-vedanhsach {
+			background-color: #a366ff;
+			padding: 14px 28px;
+		}
+
+			a.tim-vedanhsach:hover {
+				background: #8533ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.tim-vedanhsach:focus {
+				background: #8533ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		a.tim-kqdc {
+			background-color: #33cc33;
+			padding: 14px 28px;
+		}
+
+			a.tim-kqdc:hover {
+				background: #009900;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.tim-kqdc:focus {
+				background: #009900;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		a.tim-kqts {
+			background-color: #0099ff;
+			padding: 14px 28px;
+		}
+
+			a.tim-kqts:hover {
+				background: #0066ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.tim-kqts:focus {
+				background: #0066ff;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		a.tim-tieptai {
+			background-color: #ff9900;
+			padding: 14px 28px;
+		}
+
+			a.tim-tieptai:hover {
+				background: #ff6600;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.tim-tieptai:focus {
+				background: #ff6600;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+		a.tim-batdaulai {
+			background-color: #ff0000;
+			padding: 14px 28px;
+		}
+
+			a.tim-batdaulai:hover {
+				background: #cc0000;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+
+			a.tim-batdaulai:focus {
+				background: #cc0000;
+				color: white;
+				box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+			}
+	</style>
+</head>
+
+<body>
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container">	
+				@if (!string.IsNullOrEmpty(Context.Session.GetString("username")))
+				{
+					<a class="navbar-nav nav-link hidden-btn" asp-page="/TrangChu">
+						<div class="navbar-brand">Cửa hàng M</div>
+						<div class="nav-link text-dark" id="vetrangchu">Về Trang Chủ</div>
+					</a>
+					<div style="text-align: right; display: flex; justify-content: space-between;">
+						<a class="navbar-nav nav-link hidden-btn" asp-page="/TaiKhoan/ThongTin">
+							<div class="nav-link text-dark">@Context.Session.GetString("username")</div>
+							<div class="nav-link text-dark"><u>Thông tin</u></div>
+						</a>
+						<a class="navbar-nav nav-link hidden-btn" asp-page="/TaiKhoan/DangXuat">
+							<div class="nav-link" style="color: red;"><u>Đăng xuất</u></div>
+						</a>
+					</div>
+				}
+				else
+				{
+					<div class="navbar-brand">Cửa hàng M</div>
+				}
+			</div>
+		</nav>
+	</header>
+
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="container">
+			&copy; 2023 - HDT_22810201
+		</div>
+	</footer>
+</body>
+</html>

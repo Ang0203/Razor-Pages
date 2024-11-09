@@ -1,0 +1,75 @@
+﻿@page "/mat-hang/sua"
+@model HDT_22810201.Pages.MH_SuaModel
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else
+{
+	<title>Cửa hàng M: Mặt hàng - Sửa</title>
+	<div class="dv sua-div">
+		<form method="post">
+			<h1 style="font-size:24px;">Sửa sản phẩm</h1>
+			@if (@Model.SanPham is not null)
+			{
+				<input asp-for="Ma" value="@Model.Ma" readonly="" hidden="">
+				<label>
+					Mã<br>
+					<input asp-for="SanPham!.Ma"
+						   value="@Model.SanPham.Ma"
+						   maxlength="20"
+						   required="">
+				</label> <br>
+				<label>
+					Tên<br>
+					<input asp-for="SanPham!.Ten"
+						   value="@Model.SanPham.Ten"
+						   maxlength="20"
+						   required="">
+				</label> <br>
+				<label>
+					Loại<br>
+					<input id="loai-inp"
+						   asp-for="SanPham!.Loai"
+						   value="@Model.SanPham.Loai"
+						   maxlength="20"
+						   required="">
+					<select id="loai" onChange="chonLoaiCty(this.id)">
+						<option value=""></option>
+						@foreach (var s in Model.LoaiTemp)
+						{
+							<option value="@s">@s</option>
+						}
+					</select>
+				</label> <br>
+				<label>
+					Công ty<br>
+					<input id="cty-inp"
+						   asp-for="SanPham!.CongTy"
+						   value="@Model.SanPham.CongTy"
+						   maxlength="20"
+						   required="">
+					<select id="cty" onChange="chonLoaiCty(this.id)">
+						<option value=""></option>
+						@foreach (var s in Model.CTyTemp)
+						{
+							<option value="@s">@s</option>
+						}
+					</select>
+				</label> <br> <br>
+				<input type="submit" value="Sửa">
+			}
+			else
+			{
+				<h3 style="font-size:16px;">Sản phẩm không tồn tại.</h3>
+			}
+			@if (Model.Memento is null)
+			{
+				<a asp-page="/MatHang/MH_DanhSach" asp-route-trang="@Model.Trang">Quay lại</a>
+			}
+			else
+			{
+				<a asp-page="/MatHang/MH_Tim_DanhSach" asp-route-memento="@Model.Memento" asp-route-trang="@Model.Trang">Quay lại</a>
+			}
+			<div style="color: red;">@Model.BaoLoi</div>
+		</form>
+	</div>
+}

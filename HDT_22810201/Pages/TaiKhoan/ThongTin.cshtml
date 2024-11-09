@@ -1,0 +1,50 @@
+﻿@page "/tai-khoan/thong-tin"
+@model HDT_22810201.Pages.ThongTinModel
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else
+{
+	<title>Cửa hàng M: Thông tin</title>
+	<div class="dv thongtin-div">
+		<form method="post">
+			<h1 style="font-size:24px;">Thay đổi thông tin</h1>
+			<h2 style="font-size:16px;">
+				(chỉ có tác dụng trưng bày<br>
+				thông tin nhân sự do quản lí giữ)
+			</h2>
+			<br>
+			<label>
+				Tên người dùng<br>
+				<input value="@HttpContext.Session.GetString("username")" readonly="">
+			</label> <br>
+			<label>
+				Mật khẩu<br>
+				<input value="(liên hệ quản lí)" readonly="">
+			</label> <br>
+			<label>
+				Họ tên<br>
+				<input asp-for="ThayDoi[0]"
+					   value="@Model.ThayDoi[0]"
+					   maxlength="20"
+					   required="">
+			</label> <br>
+			<label>
+				Email<br>
+				<input asp-for="ThayDoi[1]"
+					   value="@Model.ThayDoi[1]"
+					   maxlength="20"
+					   required="">
+			</label> <br>
+			<label>
+				Số điện thoại<br>
+				<input asp-for="ThayDoi[2]"
+					   value="@Model.ThayDoi[2]"
+					   maxlength="20"
+					   required="">
+			</label> <br> <br>
+			<input type="submit" value="Thay đổi">
+			<a href="#" onclick="history.go(-1)">Quay lại</a>
+			<div style="color: red;">@Model.BaoLoi</div>
+		</form>
+	</div>
+}

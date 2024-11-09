@@ -1,0 +1,135 @@
+﻿@page "/hoa-don/tim"
+@model HDT_22810201.Pages.HD_TimModel
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else if (string.IsNullOrEmpty(Model.Memento))
+{
+	Response.Redirect("/loi/400");
+}
+else
+{
+	<title>Cửa hàng M: Hóa đơn - Tìm</title>
+	<div class="dv tim-div">
+		<form method="post">
+			<h1 style="font-size:24px;">Tìm hóa đơn</h1>
+			<input asp-for="Memento" value="@Model.Memento" readonly="" hidden="">
+			<label>
+				Loại
+				<input type="radio" name="Memento_HD.Loai" value="nhap" checked="">
+				Nhập
+				<input type="radio" name="Memento_HD.Loai" value="ban">
+				Bán
+			</label> <br>
+			<label>
+				Ngày
+				<select asp-for="Memento_HD.Ngay[0]" id="nsx" onChange="chonTim(this.id)">
+					<option value="0">(không xét)</option>
+					<option value="cx">chính xác</option>
+					<option value="truoc">trước</option>
+					<option value="sau">sau</option>
+					<option value="tk">trong khoảng</option>
+				</select> <br>
+				<div id="nsx-cxts" hidden="">
+					<input id="nsx-cxts1" asp-for="Memento_HD.Ngay[1]" type="date" value="" style="width: 125px;">
+				</div>
+				<div id="nsx-tk" hidden="">
+					từ <input id="nsx-tk1" asp-for="Memento_HD.Ngay[2]" type="date" value="" style="margin-left: 11px; width: 125px;"><br>
+					đến <input id="nsx-tk2" asp-for="Memento_HD.Ngay[3]" type="date" value="" style="width: 125px;"><br><br>
+				</div>
+			</label> <br>
+			<label>
+				Tổng sản phẩm
+				<select asp-for="Memento_HD.TongSanPham[0]" id="sl" onChange="chonTim(this.id)">
+					<option value="0">(không xét)</option>
+					<option value="cx">chính xác</option>
+					<option value="truoc">bé hơn</option>
+					<option value="sau">lớn hơn</option>
+					<option value="tk">trong khoảng</option>
+				</select> <br>
+				<div id="sl-cxts" hidden="">
+					<input id="sl-cxts1" asp-for="Memento_HD.TongSanPham[1]" value=""
+						   maxlength="7"
+						   style="width: 100px;"
+						   pattern="^\d*$"
+						   oninvalid="this.setCustomValidity('Vui lòng nhập số từ 0-9.')"
+						   oninput="this.setCustomValidity('')">
+				</div>
+				<div id="sl-tk" hidden="">
+					từ
+					<input id="sl-tk1" asp-for="Memento_HD.TongSanPham[2]" value=""
+						   maxlength="7"
+						   style="margin-left: 11px; width: 100px;"
+						   pattern="^\d*$"
+						   oninvalid="this.setCustomValidity('Vui lòng nhập số từ 0-9.')"
+						   oninput="this.setCustomValidity('')"><br>
+					đến
+					<input id="sl-tk2" asp-for="Memento_HD.TongSanPham[3]" value=""
+						   maxlength="7"
+						   style="width: 100px;"
+						   pattern="^\d*$"
+						   oninvalid="this.setCustomValidity('Vui lòng nhập số từ 0-9.')"
+						   oninput="this.setCustomValidity('')"><br><br>
+				</div>
+			</label> <br>
+			<label>
+				Tổng tiền
+				<select asp-for="Memento_HD.TongTien[0]" id="gia" onChange="chonTim(this.id)">
+					<option value="0">(không xét)</option>
+					<option value="cx">chính xác</option>
+					<option value="truoc">bé hơn</option>
+					<option value="sau">lớn hơn</option>
+					<option value="tk">trong khoảng</option>
+				</select> <br>
+				<div id="gia-cxts" hidden="">
+					<input id="gia-cxts1" asp-for="Memento_HD.TongTien[1]" value=""
+						   maxlength="9"
+						   style="width: 100px;"
+						   pattern="^\d*$"
+						   oninvalid="this.setCustomValidity('Vui lòng chỉ nhập số từ 0-9.')"
+						   oninput="this.setCustomValidity('')">
+					<span>đồng</span>
+				</div>
+				<div id="gia-tk" hidden="">
+					từ
+					<input id="gia-tk1" asp-for="Memento_HD.TongTien[2]" value=""
+						   maxlength="9"
+						   style="margin-left: 11px; width: 100px;"
+						   pattern="^\d*$"
+						   oninvalid="this.setCustomValidity('Vui lòng chỉ nhập số từ 0-9.')"
+						   oninput="this.setCustomValidity('')">
+					<span>đồng</span> <br>
+					đến
+					<input id="gia-tk2" asp-for="Memento_HD.TongTien[3]" value=""
+						   maxlength="9"
+						   style="width: 100px;"
+						   pattern="^\d*$"
+						   oninvalid="this.setCustomValidity('Vui lòng chỉ nhập số từ 0-9.')"
+						   oninput="this.setCustomValidity('')">
+					<span>đồng</span>
+				</div>
+			</label> <br> <br>
+			<input type="submit" value="Tìm">
+			@if (Model.Memento is null)
+			{
+				<a asp-page="/HoaDon/HD_DanhSach" asp-route-trang="@Model.Trang">Quay lại</a>
+			}
+			else if (Model.Memento != "0")
+			{
+				<a asp-page="/HoaDon/HD_Tim_DanhSach" asp-route-memento="@Model.Memento" asp-route-trang="1">Quay lại</a>
+			}
+			else
+			{
+				<a href="#" onclick="history.go(-1)">Quay lại</a>
+			}
+			<div style="color: red;">@Model.BaoLoi</div>
+			@if (Model.Memento == "0" && Model.LichSu != "")
+			{
+				<br>
+				<div style="color: green;">
+					Bạn có lịch sử tìm kiếm cũ! <br>
+					<a asp-page="/HoaDon/HD_Tim_DanhSach" asp-route-memento="@Model.LichSu" asp-route-trang="1">Đến lịch sử</a>
+				</div>
+			}
+		</form>
+	</div>
+}

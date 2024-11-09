@@ -1,0 +1,39 @@
+﻿@page "/loai-hang/xoa"
+@model HDT_22810201.Pages.LH_XoaModel
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else
+{
+	<title>Cửa hàng M: Loại hàng - Xóa</title>
+	<div class="dv xoa-div">
+		<form method="post">
+			<h1 style="font-size:24px;">Xóa loại hàng</h1>
+			@if (!string.IsNullOrEmpty(Model.Loai))
+			{
+				<input asp-for="Loai" value="@Model.Loai" readonly="" hidden="">
+				<h2 style="font-size:16px;">Bạn có <u style="font-weight: bold;">CHẮC CHẮN</u> xóa không?</h2>
+				<h3 style="font-size:16px;">Tất cả sản phẩm thuộc loại hàng sẽ bị xóa!</h3>
+				<label>
+					Loại<br>
+					<input value="@Model.LoaiHang.Loai" readonly="">
+				</label> <br>
+				<label>
+					Tổng sản phẩm<br>
+					<input value="@Model.LoaiHang.TongSP" readonly="">
+				</label> <br>
+				<label>
+					Tổng tiền<br>
+					<input value="@Model.LoaiHang.TongTien" readonly="">
+					đồng
+				</label> <br> <br>
+				<input type="submit" value="Xóa">
+			}
+			else
+			{
+				<h4 style="font-size:16px;">Loại hàng không tồn tại.</h4>
+			}
+			<a asp-page="/LoaiHang/LH_DanhSach" asp-route-trang="@Model.Trang">Quay lại</a>
+			<div style="color: red;">@Model.BaoLoi</div>
+		</form>
+	</div>
+}

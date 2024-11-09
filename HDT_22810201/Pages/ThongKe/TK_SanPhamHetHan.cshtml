@@ -1,0 +1,271 @@
+﻿@page "/thong-ke/san-pham-het-han"
+@model HDT_22810201.Pages.TK_SanPhamHetHanModel
+@functions
+{
+	public string MuiTen(string inp)
+	{
+		switch (inp.ToLower())
+		{
+			case "tang":
+				return "^";
+			case "giam":
+				return "v";
+			default:
+				return "-";
+		}
+	}
+}
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else
+{
+	<title>Cửa hàng M: Thống kê - Sản phẩm hết hạn</title>
+	<h1 style="font-size:24px; text-align: center;">Thống kê sản phẩm hết hạn</h1>
+	<div class="dieuhuong" style="color: red;">@Model.BaoLoi</div>
+	<br>
+	<form id="zform" method="post">
+		<input id="xacnhan" asp-for="XacNhan" value="@Model.XacNhan" readonly="" hidden="">
+		<input asp-for="TongTrang" value="@Model.TongTrang" readonly="" hidden="">
+		<input class="ds-sx" id="ds-0" asp-for="SapXep_SP[0]" value="@Model.SapXep_SP[0]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-1" asp-for="SapXep_SP[1]" value="@Model.SapXep_SP[1]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-2" asp-for="SapXep_SP[2]" value="@Model.SapXep_SP[2]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-3" asp-for="SapXep_SP[3]" value="@Model.SapXep_SP[3]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-4" asp-for="SapXep_SP[4]" value="@Model.SapXep_SP[4]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-5" asp-for="SapXep_SP[5]" value="@Model.SapXep_SP[5]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-6" asp-for="SapXep_SP[6]" value="@Model.SapXep_SP[6]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-7" asp-for="SapXep_SP[7]" value="@Model.SapXep_SP[7]" readonly="" hidden="">
+		<table class="danhsach">
+			<tr>
+				<th onclick="sapXep(0, 8)" style="cursor: pointer; ">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Mã
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_SP[0])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(1, 8)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Tên
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_SP[1])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(2, 8)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Loại
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_SP[2])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(3, 8)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Công ty
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_SP[3])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(4, 8)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Ngày SX
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_SP[4])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(5, 8)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Hạn dùng
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_SP[5])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(6, 8)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Số lượng
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_SP[6])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(7, 8)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Đơn giá (đồng)
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_SP[7])</span>
+					</button>
+				</th>
+			</tr>
+			@if (!Model.DanhSach.Any())
+			{
+				<tr>
+					<td colspan="8" class="dstrong" style="text-align: center;">
+						Không có sản phẩm nào hết hạn!<br>
+					</td>
+				</tr>
+			}
+			else
+			{
+				<div class="dieuhuong">
+					<a class="btn tim-batdaulai" onclick="xacNhanMe();">Xóa hết hạn và in kết quả</a>
+				</div>
+				<div class="trang">
+					<label>
+						Sản phẩm mỗi trang (Tổng: @Model.DanhSach.Count)<br>
+						<input asp-for="SPMoiTrang"
+							   value="@Model.SPMoiTrang"
+							   type="text"
+							   maxlength="9"
+							   pattern="^\d*$"
+							   style="width: 80px;"
+							   required=""
+							   oninvalid="this.setCustomValidity('Vui lòng nhập số từ 0-9.')"
+							   oninput="this.setCustomValidity('')">
+						<input type="submit" value="Xác nhận">
+					</label>
+					<br> <br>
+					@if (Model.TrangInt != 1)
+					{
+						<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="1"> &lt;&lt; </a>
+						<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="@(Model.TrangInt - 1)"> &lt; </a>
+					}
+					else
+					{
+						<a class="sangtrang hientai"> &lt;&lt; </a>
+						<a class="sangtrang hientai"> &lt; </a>
+					}
+					<span>&#160;&#160;&#160;</span>
+
+
+					@if (Model.TongTrang <= 7)
+					{
+						for (int i = 1; i <= Model.TongTrang; i++)
+						{
+							if (Model.TrangInt == i)
+							{
+								<a class="sangtrang hientai"> @i </a>
+							}
+							else
+							{
+								<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="@i"> @i </a>
+							}
+						}
+					}
+					else
+					{
+						int temp1 = ((Model.TongTrang - Model.TrangInt + 1) <= 3) ? (Model.TrangInt - Model.TongTrang + 3) : 0;
+						int temp2 = (Model.TrangInt <= 3) ? (3 - Model.TrangInt + 1) : 0;
+
+						if (Model.TrangInt <= 3)
+						{
+							for (int i = 1; i <= (Model.TrangInt - 1); i++)
+							{
+								<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="@i"> @i </a>
+							}
+						}
+						else
+						{
+							for (int i = (Model.TrangInt - 3 - temp1); i <= (Model.TrangInt - 1); i++)
+							{
+								<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="@i"> @i </a>
+							}
+						}
+						<a class="sangtrang hientai"> @Model.TrangInt </a>
+						if (Model.TrangInt >= (Model.TongTrang - 2))
+						{
+							for (int i = (Model.TrangInt + 1); i <= Model.TongTrang; i++)
+							{
+								<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="@i"> @i </a>
+							}
+						}
+						else
+						{
+							for (int i = (Model.TrangInt + 1); i <= (Model.TrangInt + 3 + temp2); i++)
+							{
+
+								<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="@i"> @i </a>
+							}
+						}
+					}
+
+					<span>&#160;&#160;&#160;</span>
+					@if (Model.TrangInt != Model.TongTrang)
+					{
+						<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="@(Model.TrangInt + 1)"> &gt; </a>
+						<a class="sangtrang diden" asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="@(Model.TongTrang)"> &gt;&gt; </a>
+					}
+					else
+					{
+						<a class="sangtrang hientai"> &gt; </a>
+						<a class="sangtrang hientai"> &gt;&gt; </a>
+					}
+					<label>
+						&#160; Nhập trang:
+						<input asp-for="Trang"
+							   value="@Model.Trang"
+							   type="text"
+							   maxlength="9"
+							   pattern="^\d*$"
+							   style="width: 50px;"
+							   oninvalid="this.setCustomValidity('Vui lòng nhập số từ 0-9.')"
+							   oninput="this.setCustomValidity('')">
+						<input type="submit" value="Đi đến">
+						(Tổng: @Model.TongTrang)
+					</label>
+					<br><br>
+				</div>
+				@for (int i = (Model.TrangInt * Model.SPMoiTrang - Model.SPMoiTrang);
+						i <= ((Model.TrangInt != Model.TongTrang) ?
+						(Model.TrangInt * Model.SPMoiTrang - 1) :
+						(Model.TrangInt * Model.SPMoiTrang - 1 - (Model.TongTrang * Model.SPMoiTrang - Model.DanhSach.Count)));
+						i++)
+				{
+					var sp = Model.DanhSach[i];
+					<tr>
+						<td>@sp.Ma</td>
+						<td>@sp.Ten</td>
+						<td>@sp.Loai</td>
+						<td>@sp.CongTy</td>
+						<td class="so">
+							@foreach (var x in sp.NgaySX)
+							{
+								@x.Value <br>
+							}
+						</td>
+						<td class="so">
+							@foreach (var x in sp.HanDung)
+							{
+								@x.Value <br>
+							}
+						</td>
+						<td class="so">
+							@foreach (var x in sp.SoLuong)
+							{
+								@x.Value <br>
+							}
+						</td>
+						<td class="so">
+							@foreach (var x in sp.Gia)
+							{
+								@x.Value <br>
+							}
+						</td>
+					</tr>
+				}
+			}
+		</table>
+	</form>
+	<button onclick="topFunction()" id="lendautrang">^</button>
+
+	<script>
+		// W3Schools
+		// Get the button
+		let mybutton = document.getElementById("lendautrang");
+
+		// When the user scrolls down 20px from the top of the document, show the button
+		window.onscroll = function () { scrollFunction() };
+
+		function scrollFunction() {
+			if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+				mybutton.style.display = "block";
+			} else {
+				mybutton.style.display = "none";
+			}
+		}
+
+		// When the user clicks on the button, scroll to the top of the document
+		function topFunction() {
+			document.body.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
+		}
+	</script>
+}

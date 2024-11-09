@@ -1,0 +1,17 @@
+﻿@page "/trang-chu"
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else
+{
+	<title>Cửa hàng M: Trang Chủ</title>
+	<div style="display: block; text-align: center;">
+		<h1 style="font-size:24px;">
+			Chào mừng @HttpContext.Session.GetString("username")! <br>
+			Hãy chọn chức năng bên dưới.
+		</h1> <br>
+		<a asp-page="/MatHang/MH_DanhSach" asp-route-trang="1" class="menu-btn" id="mathang">Mặt hàng</a> <br>
+		<a asp-page="/LoaiHang/LH_DanhSach" asp-route-trang="1" class="menu-btn" id="loaihang">Loại hàng</a> <br>
+		<a asp-page="/HoaDon/HD_DanhSach" asp-route-loai="nhap" asp-route-trang="1" class="menu-btn" id="hoadon">Hóa đơn</a> <br>
+		<a asp-page="/ThongKe/TK_SanPhamHetHan" asp-route-trang="1" class="menu-btn" id="thongke">Thống kê</a>
+	</div>
+}

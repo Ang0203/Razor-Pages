@@ -1,0 +1,42 @@
+﻿@page "/tai-khoan/dang-nhap"
+@model HDT_22810201.Pages.DangNhapModel
+
+<title>Cửa hàng M: Đăng nhập</title>
+<div class="dv dangnhap-div">
+	<form method="post">
+		<h1 style="font-size:24px;">Đăng nhập tài khoản</h1>
+		<h2 style="font-size:16px;">
+			(Vui lòng liên hệ với người quản lí để<br>
+			lấy tài khoản nếu bạn có phận sự truy cập)
+		</h2>
+		<br>
+		<label>
+			Tên người dùng<br>
+			<input asp-for="TenNguoiDung"
+				   value="@Model.TenNguoiDung"
+				   maxlength="20"
+				   required="">
+		</label> <br>
+		<label>
+			Mật khẩu<br>
+			<input type="password"
+				   asp-for="MatKhau"
+				   value="@Model.MatKhau"
+				   maxlength="20"
+				   required="">
+		</label> <br> <br>
+		<input type="submit" value="Đăng nhập">
+		<div style="color: red;">@Model.BaoLoi</div>
+		<br>
+		<div>2 tài khoản cho đồ án:</div>
+		<div>
+			- Tên người dùng: nv1 <br>
+			- Mật khẩu: 123 <br>
+		</div>
+		<br>
+		<div>
+			- Tên người dùng: nv2 <br>
+			- Mật khẩu: 123 <br>
+		</div>
+	</form>
+</div>

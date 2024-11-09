@@ -1,0 +1,241 @@
+﻿@page "/hoa-don/them-banxn"
+@model HDT_22810201.Pages.HD_ThemBanXNModel
+@functions
+{
+	public string MuiTen(string inp)
+	{
+		switch (inp.ToLower())
+		{
+			case "tang":
+				return "^";
+			case "giam":
+				return "v";
+			default:
+				return "-";
+		}
+	}
+}
+
+@if (string.IsNullOrEmpty(HttpContext.Session.GetString("username"))) Response.Redirect("/tai-khoan/dang-nhap");
+else
+{
+	<title>Cửa hàng M: Hóa đơn - Thêm bán</title>
+	<h1 style="font-size:24px; text-align: center;">Thêm hóa đơn bán - Xác nhận</h1>
+	<div class="dieuhuong">
+		@if (Model.DanhSach.Any())
+		{
+			<a class="btn them-btn tim-quaphai" onclick="xacNhanMe();">Xác nhận</a>	
+		}
+		else
+		{
+			<a class="btn nutbitat tim-quaphai">Xác nhận</a>
+		}
+		<a class="btn tim-vedanhsach" asp-page="/HoaDon/HD_Them_Ban">Về thêm bán</a>
+	</div>
+	<div class="dieuhuong">
+		Dữ liệu không hợp lệ sẽ không được liệt kê.<br>
+		Vui lòng chỉ nhập số, không kí tự, và bé hơn tổng số lượng.
+	</div>
+	<div class="dieuhuong" style="color: red;">@Model.BaoLoi</div>
+	<br>
+	<form id="zform" method="post">
+		<input id="xacnhan" asp-for="XacNhan" value="@Model.XacNhan" readonly="" hidden="">
+		<input asp-for="TongTrang" value="@Model.TongTrang" readonly="" hidden="">
+		<input class="ds-sx" id="ds-0" asp-for="SapXep_HD_ThemBan[0]" value="@Model.SapXep_HD_ThemBan[0]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-1" asp-for="SapXep_HD_ThemBan[1]" value="@Model.SapXep_HD_ThemBan[1]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-2" asp-for="SapXep_HD_ThemBan[2]" value="@Model.SapXep_HD_ThemBan[2]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-3" asp-for="SapXep_HD_ThemBan[3]" value="@Model.SapXep_HD_ThemBan[3]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-4" asp-for="SapXep_HD_ThemBan[4]" value="@Model.SapXep_HD_ThemBan[4]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-5" asp-for="SapXep_HD_ThemBan[5]" value="@Model.SapXep_HD_ThemBan[5]" readonly="" hidden="">
+		<input class="ds-sx" id="ds-6" asp-for="SapXep_HD_ThemBan[6]" value="@Model.SapXep_HD_ThemBan[6]" readonly="" hidden="">
+		<table class="danhsach">
+			<tr>
+				<th onclick="sapXep(0, 7)" style="cursor: pointer; ">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Mã
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemBan[0])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(1, 7)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Tên
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemBan[1])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(2, 7)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Loại
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemBan[2])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(3, 7)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Công ty
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemBan[3])</span>
+					</button>
+				</th>
+				<th onclick="sapXep(6, 7)" style="cursor: pointer;">
+					<button class="hidden-btn" style="font-weight: bold;">
+						Số lượng
+						<span style="margin-left: 7px;">@MuiTen(Model.SapXep_HD_ThemBan[6])</span>
+					</button>
+				</th>
+			</tr>
+			@if (!Model.DanhSach.Any())
+			{
+				<tr>
+					<td colspan="9" class="dstrong" style="text-align: center;">
+						Danh sách hiện đang trống.<br>
+					</td>
+				</tr>
+			}
+			else
+			{
+				<div class="trang">
+					<label>
+						Sản phẩm mỗi trang (Tổng: @Model.DanhSach.Count)<br>
+						<input asp-for="SPMoiTrang"
+							   value="@Model.SPMoiTrang"
+							   type="text"
+							   maxlength="9"
+							   pattern="^\d*$"
+							   style="width: 80px;"
+							   required=""
+							   oninvalid="this.setCustomValidity('Vui lòng nhập số từ 0-9.')"
+							   oninput="this.setCustomValidity('')">
+						<input type="submit" value="Xác nhận">
+					</label>
+					<br> <br>
+					@if (Model.TrangInt != 1)
+					{
+						<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="1"> &lt;&lt; </a>
+						<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="@(Model.TrangInt - 1)"> &lt; </a>
+					}
+					else
+					{
+						<a class="sangtrang hientai"> &lt;&lt; </a>
+						<a class="sangtrang hientai"> &lt; </a>
+					}
+					<span>&#160;&#160;&#160;</span>
+
+
+					@if (Model.TongTrang <= 7)
+					{
+						for (int i = 1; i <= Model.TongTrang; i++)
+						{
+							if (Model.TrangInt == i)
+							{
+								<a class="sangtrang hientai"> @i </a>
+							}
+							else
+							{
+								<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="@i"> @i </a>
+							}
+						}
+					}
+					else
+					{
+						int temp1 = ((Model.TongTrang - Model.TrangInt + 1) <= 3) ? (Model.TrangInt - Model.TongTrang + 3) : 0;
+						int temp2 = (Model.TrangInt <= 3) ? (3 - Model.TrangInt + 1) : 0;
+
+						if (Model.TrangInt <= 3)
+						{
+							for (int i = 1; i <= (Model.TrangInt - 1); i++)
+							{
+								<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="@i"> @i </a>
+							}
+						}
+						else
+						{
+							for (int i = (Model.TrangInt - 3 - temp1); i <= (Model.TrangInt - 1); i++)
+							{
+								<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="@i"> @i </a>
+							}
+						}
+						<a class="sangtrang hientai"> @Model.TrangInt </a>
+						if (Model.TrangInt >= (Model.TongTrang - 2))
+						{
+							for (int i = (Model.TrangInt + 1); i <= Model.TongTrang; i++)
+							{
+								<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="@i"> @i </a>
+							}
+						}
+						else
+						{
+							for (int i = (Model.TrangInt + 1); i <= (Model.TrangInt + 3 + temp2); i++)
+							{
+
+								<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="@i"> @i </a>
+							}
+						}
+					}
+
+					<span>&#160;&#160;&#160;</span>
+					@if (Model.TrangInt != Model.TongTrang)
+					{
+						<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="@(Model.TrangInt + 1)"> &gt; </a>
+						<a class="sangtrang diden" asp-page="/HoaDon/HD_Them_BanXN" asp-route-trang="@(Model.TongTrang)"> &gt;&gt; </a>
+					}
+					else
+					{
+						<a class="sangtrang hientai"> &gt; </a>
+						<a class="sangtrang hientai"> &gt;&gt; </a>
+					}
+					<label>
+						&#160; Nhập trang:
+						<input asp-for="Trang"
+							   value="@Model.Trang"
+							   type="text"
+							   maxlength="9"
+							   pattern="^\d*$"
+							   style="width: 50px;"
+							   oninvalid="this.setCustomValidity('Vui lòng nhập số từ 0-9.')"
+							   oninput="this.setCustomValidity('')">
+						<input type="submit" value="Đi đến">
+						(Tổng: @Model.TongTrang)
+					</label>
+					<br><br>
+				</div>
+				@for (int i = (Model.TrangInt * Model.SPMoiTrang - Model.SPMoiTrang);
+						i <= ((Model.TrangInt != Model.TongTrang) ?
+						(Model.TrangInt * Model.SPMoiTrang - 1) :
+						(Model.TrangInt * Model.SPMoiTrang - 1 - (Model.TongTrang * Model.SPMoiTrang - Model.DanhSach.Count)));
+						i++)
+				{
+					var sp = Model.DanhSach[i];
+					<tr>
+						<td>@sp.Ma</td>
+						<td>@sp.Ten</td>
+						<td>@sp.Loai</td>
+						<td>@sp.CongTy</td>
+						<td class="so">@sp.SoLuong[""]</td>
+					</tr>
+				}
+			}
+		</table>
+	</form>
+	<button onclick="topFunction()" id="lendautrang">^</button>
+
+	<script>
+		// W3Schools
+		// Get the button
+		let mybutton = document.getElementById("lendautrang");
+
+		// When the user scrolls down 20px from the top of the document, show the button
+		window.onscroll = function () { scrollFunction() };
+
+		function scrollFunction() {
+			if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+				mybutton.style.display = "block";
+			} else {
+				mybutton.style.display = "none";
+			}
+		}
+
+		// When the user clicks on the button, scroll to the top of the document
+		function topFunction() {
+			document.body.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
+		}
+	</script>
+}
